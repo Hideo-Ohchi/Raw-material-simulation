@@ -1,0 +1,22 @@
+# Temporary PowerShell scripts
+FixExecuteSimulation.ps1
+Fix_ExecuteSimulation_NoClose.ps1
+Fix_HeaderMojibake.ps1
+InspectVba.ps1
+ListModules.ps1
+Patch_ExecuteSimulation.ps1
+RunAndVerify_ExecuteSimulation.ps1
+UpdateExecuteSimulation.ps1
+Verify_ExecuteSimulation.ps1
+
+# Temporary text files
+ExecuteSimulation_PowerShell.txt
+ExecuteSimulation_new.txt
+ExecuteSimulation_original.txt
+
+# Backup/Lock files
+~$*
+
+# Node modules and build artifacts
+node_modules/
+*.log
