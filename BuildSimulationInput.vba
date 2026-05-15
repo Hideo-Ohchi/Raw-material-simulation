@@ -1,14 +1,16 @@
 Attribute VB_Name = "Module1"
 Sub BuildSimulationInput()
     Dim wsConfig As Worksheet
+    Dim wsMainConfig As Worksheet
     Dim wsPlan As Worksheet
     Dim wsOut As Worksheet
     Dim wsMaster As Worksheet
     On Error GoTo ErrorHandler
-    Set wsConfig = ThisWorkbook.Sheets(16)
-    Set wsPlan = ThisWorkbook.Sheets(2)
-    Set wsOut = ThisWorkbook.Sheets(17)
-    Set wsMaster = ThisWorkbook.Sheets(6)
+    Set wsConfig = ThisWorkbook.Sheets("シミュレーション設定")
+    Set wsMainConfig = ThisWorkbook.Sheets("設定")
+    Set wsPlan = ThisWorkbook.Sheets("生産計画")
+    Set wsOut = ThisWorkbook.Sheets("シミュレーションイン")
+    Set wsMaster = ThisWorkbook.Sheets("品目マスタ")
     Application.ScreenUpdating = False
     Dim startYM As Long
     Dim monthCount As Long
@@ -38,6 +40,14 @@ Sub BuildSimulationInput()
         Application.ScreenUpdating = True
         Exit Sub
     End If
+
+    ' Keep C1 fetch logic aligned with the same period values.
+    wsMainConfig.Range("B1").Value = startYM
+    wsMainConfig.Range("B2").Value = monthCount
+
+    On Error GoTo C1FetchError
+    Call C1データ取得.Main
+    On Error GoTo ErrorHandler
     Dim planDict As Object
     Set planDict = CreateObject("Scripting.Dictionary")
     Dim planLastRow As Long
@@ -139,6 +149,12 @@ Sub BuildSimulationInput()
     Application.ScreenUpdating = True
     MsgBox "OK: " & planDict.Count & " items, " & monthCount & " months. Start:" & startYM, vbInformation, "Success"
     Exit Sub
+
+C1FetchError:
+    Application.ScreenUpdating = True
+    MsgBox "Error while running C1 fetch: " & Err.Description, vbCritical, "C1 Fetch Error"
+    Exit Sub
+
 ErrorHandler:
     Application.ScreenUpdating = True
     MsgBox "Error " & Err.Number & ": " & Err.Description & vbCrLf & _
